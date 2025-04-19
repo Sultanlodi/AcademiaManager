@@ -1,8 +1,6 @@
 
-/*
-- Final Project
-- Sultan Lodi, Jeremiah Registre, Ali Amar Abid
-*/
+// Final Project
+// Names: Sultan Lodi, Jeremiah Registre, Ali Amar Abid
 
 import java.util.*;
 
