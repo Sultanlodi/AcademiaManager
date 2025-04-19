@@ -1,7 +1,7 @@
 
 /*
 - Final Project
-- Sultan Lodi, Jeremiah Registre,
+- Sultan Lodi, Jeremiah Registre, You didn't add your name
 */
 
 import java.util.*;
