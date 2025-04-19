@@ -1,3 +1,4 @@
+
 /*
 - Final Project
 - Sultan Lodi, Jeremiah Registre,
@@ -131,6 +132,39 @@ class Faculty extends Employee {
     }
 }
 
+// Staff class
+class Staff extends Employee {
+    private String status;
+
+    public Staff(String fullName, String id, String department, String status) {
+        super(fullName, id, department);
+        setStatus(status);
+    }
+
+    public void setStatus(String status) {
+        status = status.trim().toLowerCase();
+        if (!status.equals("full-time") && !status.equals("part-time")) {
+            throw new IllegalArgumentException("Status must be either 'Full-time' or 'Part-time'.");
+        }
+        this.status = capitalize(status);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    private String capitalize(String word) {
+        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+    }
+
+    @Override
+    public void print() {
+        System.out.println(fullName);
+        System.out.println("ID: " + id);
+        System.out.println(department + ", " + status);
+    }
+}
+
 
 //Main program and the menu
 public class FinalProject {
@@ -158,8 +192,8 @@ public class FinalProject {
                 case "2": enterStudent(); break;
                 case "3": printStudentInvoice(); break;
                 case "4": printFaculty(); break;
-                //case "5": enterStaff(); break;
-                //case "6": printStaff(); break;
+                case "5": enterStaff(); break;
+                case "6": printStaff(); break;
                 //case "7": deletePerson(); break;
                 //case "8": exitProgram(); return;
                 default: System.out.println("Invalid selection.");
@@ -270,6 +304,59 @@ public class FinalProject {
         }
         System.out.println("Sorry, no faculty with ID = " + id);
     }
+
+    // Add new staff
+static void enterStaff() {
+    for (int attempt = 0; attempt < 3; attempt++) {
+        try {
+            System.out.print("Name: ");
+            String name = formatName(sc.nextLine());
+
+            System.out.print("ID: ");
+            String id = sc.nextLine();
+
+            if (!validateId(id)) {
+                System.out.println("Invalid ID format. Must be LetterLetterDigitDigitDigitDigit");
+                continue;
+            }
+
+            if (idExists(id)) {
+                System.out.println("ID already exists.");
+                return;
+            }
+
+            System.out.print("Department (Mathematics, Engineering, English): ");
+            String dept = sc.nextLine();
+
+            System.out.print("Status (Full-time or Part-time): ");
+            String status = sc.nextLine();
+
+            personnel.add(new Staff(name, id, dept, status));
+            System.out.println("Staff added!");
+            return;
+        } catch (Exception e) {
+            System.out.println("Invalid input. Try again.");
+        }
+    }
+}
+
+// Print staff info
+static void printStaff() {
+    for (int attempt = 0; attempt < 3; attempt++) {
+        System.out.print("Enter the staff ID: ");
+        String id = sc.nextLine();
+
+        for (Person p : personnel) {
+            if (p instanceof Staff && p.getId().equalsIgnoreCase(id)) {
+                System.out.println();
+                p.print();
+                return;
+            }
+        }
+
+        System.out.println("Sorry, no staff with ID = " + id);
+    }
+}
 
 }
     
