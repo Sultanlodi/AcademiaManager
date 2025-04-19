@@ -1,7 +1,6 @@
 /*
 - Final Project
-- Sultan Lodi, Jeremiah Registre~
-- (Optional) Any other notes for the TA
+- Sultan Lodi, Jeremiah Registre,
 */
 
 import java.util.*;
@@ -271,7 +270,7 @@ public class FinalProject {
         }
         System.out.println("Sorry, no faculty with ID = " + id);
     }
-        
+
 }
     
 
