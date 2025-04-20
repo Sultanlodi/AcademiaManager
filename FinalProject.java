@@ -1,7 +1,9 @@
 
 // Final Project
-// Names: Sultan Lodi, Jeremiah Registre, Ali Amar Abid
+// Names: Sultan Lodi, Jeremiah Registre, Ali Amar Abid, Soufiane Draissi
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 abstract class Person {
@@ -192,8 +194,8 @@ public class FinalProject {
                 case "4": printFaculty(); break;
                 case "5": enterStaff(); break;
                 case "6": printStaff(); break;
-                //case "7": deletePerson(); break;
-                //case "8": exitProgram(); return;
+                case "7": deletePerson(); break;
+                case "8": exitProgram(); return;
                 default: System.out.println("Invalid selection.");
             }
         }
@@ -354,6 +356,89 @@ static void printStaff() {
 
         System.out.println("Sorry, no staff with ID = " + id);
     }
+}
+
+// Deleting a person
+static void deletePerson() {
+    System.out.print("Enter the ID of the person to delete: ");
+    String id = sc.nextLine().trim();
+
+    if (!validateId(id)) {
+        System.out.println("Invalid ID format. Try again.");
+        return;
+    }
+
+    for (int i = 0; i < personnel.size(); i++) {
+        if (personnel.get(i).getId().equalsIgnoreCase(id)) {
+            System.out.print("Are you sure you want to delete this person? (Y/N): ");
+            String confirm = sc.nextLine().trim().toLowerCase();
+            if (confirm.equals("y")) {
+                personnel.remove(i);
+                System.out.println("Person with ID " + id + " has been deleted.");
+            } else {
+                System.out.println("Deletion canceled.");
+            }
+            return;
+        }
+    }
+    System.out.println("No person found with ID = " + id);
+}
+
+// Exiting the program
+static void exitProgram() {
+    System.out.print("Would you like to create the report? (Y/N): ");
+    String response = sc.nextLine().trim().toLowerCase();
+    if (!response.equals("y")) {
+        System.out.println("Goodbye!");
+        return;
+    }
+
+    System.out.print("Would you like to sort your students by GPA or name? (Enter 1 for GPA. Enter 2 for name): ");
+    String sortChoice = sc.nextLine().trim();
+
+    ArrayList<Student> students = new ArrayList<>();
+    ArrayList<Faculty> facultyList = new ArrayList<>();
+    ArrayList<Staff> staffList = new ArrayList<>();
+
+    for (Person p : personnel) {
+        if (p instanceof Student) students.add((Student) p);
+        else if (p instanceof Faculty) facultyList.add((Faculty) p);
+        else if (p instanceof Staff) staffList.add((Staff) p);
+    }
+
+    facultyList.sort(Comparator.comparing(Faculty::getDepartment));
+
+    if (sortChoice.equals("1")) {
+        students.sort(null); // by GPA
+    } else if (sortChoice.equals("2")) {
+        students.sort(Comparator.comparing(Student::getFullName));
+    }
+
+    try (PrintWriter pw = new PrintWriter("report.txt")) {
+        pw.println("Report created on " + java.time.LocalDate.now());
+        pw.println("*******************************\n");
+
+        pw.println("Faculty Members\n-------------------------");
+        for (Faculty f : facultyList) {
+            pw.printf("%s\nID: %s\n%s, %s\n\n", f.fullName, f.id, f.rank, f.department);
+        }
+
+        pw.println("Staff Members\n-------------------");
+        for (Staff s : staffList) {
+            pw.printf("%s\nID: %s\n%s, %s\n\n", s.fullName, s.id, s.department, s.getStatus());
+        }
+
+        pw.println("Students (Sorted by " + (sortChoice.equals("1") ? "GPA" : "Name") + ")\n--------------------------------------------");
+        for (Student s : students) {
+            pw.printf("%s\nID: %s\nGPA: %.2f\nCredit hours: %d\n\n", s.getFullName(), s.getId(), s.getGpa(), s.getCreditHours());
+        }
+
+        System.out.println("Report created and saved to report.txt!");
+    } catch (IOException e) {
+        System.out.println("Error writing to report.txt");
+    }
+
+    System.out.println("Goodbye!");
 }
 
 }
